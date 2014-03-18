@@ -59,12 +59,20 @@ def openUrl(url, id, i):
   firefox_profile.set_preference("browser.download.folderList",2)
   firefox_profile.set_preference("webdriver.load.strategy", "unstable")
   driver = webdriver.Firefox(firefox_profile = firefox_profile, proxy=proxy, firefox_binary=FirefoxBinary('/usr/bin/firefox'))
+  driver.set_window_size(500,500)
   #driver.headers = {"Referer" : url}
-  #driver.set_page_load_timeout(10)
+  driver.set_page_load_timeout(10)
   try:
     driver.get("http://www.shangxueba.com/share/p%s.html" % id)
     driver.execute_script('$(".download_btn a").removeAttr("target")')
     driver.find_element_by_xpath("//div[@class='download_btn']/a/img").click()
+    print driver.title
+    input = raw_input("请输入验证码: ") 
+    txtVerify = driver.find_element_by_id("txtVerify")
+    txtVerify.clear()
+    txtVerify.send_keys(input)
+    driver.find_element_by_id("Button1").click()
+    driver.close()
   except Exception as e:
     print e
   #finally:
