@@ -106,8 +106,9 @@ def personalData():
 if __name__ == '__main__':
   # 参数检测
   if len(sys.argv) <> 3:
-    print "params error"
+    print "使用说明:"
     print "python %s proxyIP proxyPort" % sys.argv[0]
+    print "proxyIP,proxyPort 获取方式: http://www.youdaili.cn/"
     sys.exit()
     
   # 获取 proxy info params
