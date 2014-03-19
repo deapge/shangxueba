@@ -41,27 +41,41 @@ def testSocket(ip, port):
     print ip+':'+port+'--status:error--Connection refused.'
     return 0
 
-
-def openUrl(url, id, i):
-  '''
-  webdriver.Firefox 打开指定URL,并做跳转到输入验证码页面
-  '''
+def getDriver(type='Firefox'):
   myProxy = ":".join([sys.argv[1], sys.argv[2]])
-  proxy = Proxy({
+  if type == 'Firefox':
+    proxy = Proxy({
       'proxyType': ProxyType.MANUAL,
       'httpProxy': myProxy,
       'ftpProxy': myProxy,
       'sslProxy': myProxy,
       'noProxy': '' # set this value as desired
       })
-  firefox_profile = FirefoxProfile()
-  #firefox_profile.add_extension("firefox_extensions/adblock_plus-2.5.1-sm+tb+an+fx.xpi")
-  firefox_profile.set_preference("browser.download.folderList",2)
-  firefox_profile.set_preference("webdriver.load.strategy", "unstable")
-  driver = webdriver.Firefox(firefox_profile = firefox_profile, proxy=proxy, firefox_binary=FirefoxBinary('/usr/bin/firefox'))
+    firefox_profile = FirefoxProfile()
+    #firefox_profile.add_extension("firefox_extensions/adblock_plus-2.5.1-sm+tb+an+fx.xpi")
+    firefox_profile.set_preference("browser.download.folderList",2)
+    firefox_profile.set_preference("webdriver.load.strategy", "unstable")
+    driver = webdriver.Firefox(firefox_profile = firefox_profile, proxy=proxy, firefox_binary=FirefoxBinary('/usr/bin/firefox'))
+  else:  #  PhantomJS
+    service_args = [
+    '--proxy='+myProxy,
+    '--proxy-type=http',
+    ]
+    webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.customHeaders.Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.customHeaders.User-Agent'] = 'Mozilla/5.0 (X11; Windows x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.117 Safari/537.36'
+    driver = webdriver.PhantomJS(service_args=service_args)
+  return driver
+
+def openUrl(url, id, i):
+  '''
+  webdriver.Firefox 打开指定URL,并做跳转到输入验证码页面
+  '''
+  driver = getDriver('Firefox')
+  
   driver.set_window_size(500,500)
   #driver.headers = {"Referer" : url}
   driver.set_page_load_timeout(10)
+  #driver.set_script_timeout(5)
   try:
     driver.get("http://www.shangxueba.com/share/p%s.html" % id)
     driver.execute_script('$(".download_btn a").removeAttr("target")')
@@ -74,11 +88,14 @@ def openUrl(url, id, i):
     print "得到验证码值:", input
     #print driver.get_cookies()
     # get cookie <<<
-    #input = raw_input("请输入验证码: ") 
+    #input = raw_input("请输入验证码: ")
     txtVerify = driver.find_element_by_id("txtVerify")
     txtVerify.clear()
     txtVerify.send_keys(input)
     driver.find_element_by_id("Button1").click()
+    
+    print "TA已经在上学吧网站累计赚钱 ", driver.find_element_by_id("Laballsitegetmoney").text
+    print "您本次进行下载，上传者获得 ", driver.find_element_by_id("LabGetMoney").text
   except Exception as e:
     print e
   finally:

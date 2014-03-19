@@ -15,3 +15,6 @@ personalData()函数里面的ids可以随意修改,最终取的时候,会随机�
   按现有计费方式:需要输入1000个验证码才会有1元收入.
   
   
+ubuntu Phantomjs 1.9 install method
+http://stackoverflow.com/questions/8778513/how-can-i-setup-run-phantomjs-on-ubuntu
+  
