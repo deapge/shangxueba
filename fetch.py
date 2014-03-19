@@ -66,17 +66,23 @@ def openUrl(url, id, i):
     driver.get("http://www.shangxueba.com/share/p%s.html" % id)
     driver.execute_script('$(".download_btn a").removeAttr("target")')
     driver.find_element_by_xpath("//div[@class='download_btn']/a/img").click()
-    print driver.title
-    input = raw_input("请输入验证码: ") 
+    print str(i)," : " , driver.title
+    driver.execute_script('$("iframe").remove()')
+    # get cookie >>>
+    driver.find_element_by_id("imgVerify").click()
+    input = driver.get_cookie("CheckCode")['value']
+    print "得到验证码值:", input
+    #print driver.get_cookies()
+    # get cookie <<<
+    #input = raw_input("请输入验证码: ") 
     txtVerify = driver.find_element_by_id("txtVerify")
     txtVerify.clear()
     txtVerify.send_keys(input)
     driver.find_element_by_id("Button1").click()
-    driver.close()
   except Exception as e:
     print e
-  #finally:
-    #driver.close()
+  finally:
+    driver.close()
 
 def personalPage():
   '''
