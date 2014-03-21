@@ -17,4 +17,10 @@ personalData()函数里面的ids可以随意修改,最终取的时候,会随机�
   
 ubuntu Phantomjs 1.9 install method
 http://stackoverflow.com/questions/8778513/how-can-i-setup-run-phantomjs-on-ubuntu
+
+
+使用 pyvirtualdisplay 隐藏窗口
+http://stackoverflow.com/questions/1418082/is-it-possible-to-hide-the-browser-in-selenium-rc
+sudo apt-get install xvfb python-pip
+sudo pip install pyvirtualdisplay
   
