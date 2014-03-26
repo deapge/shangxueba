@@ -93,7 +93,7 @@ def getYoudailiUrl():
   response = urllib.urlopen("http://www.youdaili.cn/")
   result = response.read()
   soup = BeautifulSoup(result)
-  url = soup.find_all("div",class_="m_box2")[0].find("li").find("a")['href']
+  url = soup.find_all("a",{"title":"%s月%s日 国内ip在线代理" % (time.strftime("%m"), time.strftime("%d"))})[0]['href']
   linksDict.append(url)
   id = re.compile("http\/(.*?)\.html").findall(url)
   # 得到分页URL

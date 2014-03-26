@@ -87,8 +87,8 @@ def openUrl(httpProxy, url, id, i):
   #driver = webdriver.Chrome('windows/chromedriver.exe')
   driver.set_window_size(500,500)
   #driver.headers = {"Referer" : url}
-  #driver.set_page_load_timeout(10)
-  #driver.set_script_timeout(5)
+  driver.set_page_load_timeout(10)
+  driver.set_script_timeout(5)
   try:
     driver.get("http://www.shangxueba.com/share/p%s.html" % id)
     driver.execute_script('$(".download_btn a").removeAttr("target")')
@@ -130,7 +130,7 @@ def personalData(httpProxy):
 def getProxyInfo():
   # 得到  proxy info
   for fileName in os.listdir(proxyFilePath):
-    #os.remove(proxyFilePath+"/"+fileName)
+    os.remove(proxyFilePath+"/"+fileName)
     proxyInfo = fileName.split("-")
     ip   = proxyInfo[0]
     port = proxyInfo[1]
