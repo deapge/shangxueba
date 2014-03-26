@@ -7,9 +7,7 @@
 
 '''
 免费代理 IP地址: http://www.youdaili.cn/
-
 '''
-
 
 import sys,re,random,time
 import socket
@@ -56,7 +54,9 @@ def getDriver(type='Firefox'):
     firefox_profile.add_extension("firefox_extensions/webdriver_element_locator-1.rev312-fx.xpi")
     firefox_profile.set_preference("browser.download.folderList",2)
     firefox_profile.set_preference("webdriver.load.strategy", "unstable")
-    driver = webdriver.Firefox(firefox_profile = firefox_profile, proxy=proxy, firefox_binary=FirefoxBinary('/usr/bin/firefox'))
+    #driver = webdriver.Firefox(firefox_profile = firefox_profile, proxy=proxy, firefox_binary=FirefoxBinary('/usr/bin/firefox'))
+    #driver = webdriver.Firefox(firefox_profile = firefox_profile, proxy=proxy, firefox_binary=FirefoxBinary("/cygdrive/c/Program\ Files\ (x86)/Mozilla\ Firefox/firefox.exe"))
+    driver = webdriver.Firefox(firefox_profile = firefox_profile, proxy=proxy)
   else:  #  PhantomJS
     service_args = [
     '--proxy='+myProxy,
@@ -64,7 +64,7 @@ def getDriver(type='Firefox'):
     ]
     webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.customHeaders.Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
     webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.customHeaders.User-Agent'] = 'Mozilla/5.0 (X11; Windows x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.117 Safari/537.36'
-    driver = webdriver.PhantomJS(service_args=service_args)
+    driver = webdriver.PhantomJS(executable_path='windows/phantomjs.exe', service_args=service_args)
   return driver
 
 # 多线程处理
@@ -81,7 +81,9 @@ def openUrl(url, id, i):
   '''
   webdriver.Firefox 打开指定URL,并做跳转到输入验证码页面
   '''
-  driver = getDriver('Firefox')
+  #driver = getDriver('Firefox')
+  driver = getDriver('PhantomJS')
+  #driver = webdriver.Chrome('windows/chromedriver.exe')
   driver.set_window_size(500,500)
   #driver.headers = {"Referer" : url}
   driver.set_page_load_timeout(10)
@@ -93,18 +95,16 @@ def openUrl(url, id, i):
     print str(i)," : " , driver.title
     driver.execute_script('$("iframe").remove()')
     # get cookie >>>
-    driver.find_element_by_id("imgVerify").click()
+    #driver.find_element_by_id("imgVerify").click()
     input = driver.get_cookie("CheckCode")['value']
     print "得到验证码值:", input
     #print driver.get_cookies()
     # get cookie <<<
     #input = raw_input("请输入验证码: ")
-    txtVerify = driver.find_element_by_id("txtVerify")
-    txtVerify.clear()
-    txtVerify.send_keys(input)
+    #driver.find_element_by_id("txtVerify").clear()
+    driver.find_element_by_xpath("//input[@name='txtVerify']").send_keys(input)
     driver.find_element_by_id("Button1").click()
-    print driver.page_source
-    
+    #print driver.page_source
     print "TA已经在上学吧网站累计赚钱 ", driver.find_element_by_id("Laballsitegetmoney").text
     print "您本次进行下载，上传者获得 ", driver.find_element_by_id("LabGetMoney").text
   except Exception as e:
