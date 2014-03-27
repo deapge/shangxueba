@@ -58,7 +58,7 @@ def getDriver(httpProxy = '', type='Firefox'):
     #driver = webdriver.Firefox(firefox_profile = firefox_profile, proxy=proxy, firefox_binary=FirefoxBinary('/usr/bin/firefox'))
     #driver = webdriver.Firefox(firefox_profile = firefox_profile, proxy=proxy, firefox_binary=FirefoxBinary("/cygdrive/c/Program\ Files\ (x86)/Mozilla\ Firefox/firefox.exe"))
     driver = webdriver.Firefox(firefox_profile = firefox_profile, proxy=proxy)
-  else:  #  PhantomJS
+  elif type == 'PhantomJS':  #  PhantomJS
     service_args = [
     '--proxy='+httpProxy,
     '--proxy-type=http',
@@ -67,6 +67,10 @@ def getDriver(httpProxy = '', type='Firefox'):
     webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.customHeaders.Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
     webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.customHeaders.User-Agent'] = 'Mozilla/5.0 (X11; Windows x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.117 Safari/537.36'
     driver = webdriver.PhantomJS(executable_path='windows/phantomjs.exe', service_args=service_args)
+  else: # Chrome
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('--proxy-server=%s' % httpProxy)
+    driver = webdriver.Chrome(executable_path='windows/chromedriver.exe', chrome_options=chrome_options)
   return driver
 
 # 多线程处理
@@ -84,8 +88,8 @@ def openUrl(httpProxy, url, id, i):
   webdriver.Firefox 打开指定URL,并做跳转到输入验证码页面
   '''
   #driver = getDriver(httpProxy, 'Firefox')
-  #driver = getDriver(httpProxy, 'PhantomJS')
-  driver = webdriver.Chrome('windows/chromedriver.exe')
+  driver = getDriver(httpProxy, 'PhantomJS')
+  #driver = getDriver(httpProxy, 'Chrome')
   driver.set_window_size(500,500)
   #driver.headers = {"Referer" : url}
   driver.set_page_load_timeout(30)
