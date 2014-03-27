@@ -20,7 +20,7 @@ from bs4 import BeautifulSoup
 import socket
 import threading
 from socket import error as socket_error
-from datetime import datetime
+import datetime
 
 proxyFilePath = time.strftime("%Y%m%d")
 proxyDict = []
@@ -90,10 +90,10 @@ def getYoudailiUrl():
   '''
   linksDict = []
   # 得到主页对应的最新的url
-  response = urllib.urlopen("http://www.youdaili.cn/")
+  response = urllib.urlopen("http://www.youdaili.cn/Daili/guonei/")
   result = response.read()
   soup = BeautifulSoup(result)
-  url = soup.find_all("a",{"title":"%s月%s日 国内ip在线代理" % (time.strftime("%m"), time.strftime("%d"))})[0]['href']
+  url = soup.find_all("ul",class_="newslist_line")[0].find("a")['href']
   linksDict.append(url)
   id = re.compile("http\/(.*?)\.html").findall(url)
   # 得到分页URL
@@ -110,7 +110,9 @@ def getYoudailiUrl():
 
 if __name__ == '__main__':
   if not os.path.exists(proxyFilePath): os.makedirs(proxyFilePath)
-  
+  # 删除昨天的文件夹
+  removePath = time.strftime("%Y%m%d",time.gmtime(time.time()-24*3600))
+  if os.path.exists(removePath): os.remove(removePath)
   linksDict = getYoudailiUrl()
   for url in linksDict:
     fetchProxyServer(url)

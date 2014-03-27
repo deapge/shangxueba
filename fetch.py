@@ -62,6 +62,7 @@ def getDriver(httpProxy = '', type='Firefox'):
     service_args = [
     '--proxy='+httpProxy,
     '--proxy-type=http',
+    '--load-images=no',
     ]
     webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.customHeaders.Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
     webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.customHeaders.User-Agent'] = 'Mozilla/5.0 (X11; Windows x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.117 Safari/537.36'
@@ -83,11 +84,11 @@ def openUrl(httpProxy, url, id, i):
   webdriver.Firefox 打开指定URL,并做跳转到输入验证码页面
   '''
   #driver = getDriver(httpProxy, 'Firefox')
-  driver = getDriver(httpProxy, 'PhantomJS')
-  #driver = webdriver.Chrome('windows/chromedriver.exe')
+  #driver = getDriver(httpProxy, 'PhantomJS')
+  driver = webdriver.Chrome('windows/chromedriver.exe')
   driver.set_window_size(500,500)
   #driver.headers = {"Referer" : url}
-  driver.set_page_load_timeout(10)
+  driver.set_page_load_timeout(30)
   driver.set_script_timeout(5)
   try:
     driver.get("http://www.shangxueba.com/share/p%s.html" % id)
