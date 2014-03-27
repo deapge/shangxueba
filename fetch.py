@@ -62,7 +62,6 @@ def getDriver(httpProxy = '', type='Firefox'):
     service_args = [
     '--proxy='+httpProxy,
     '--proxy-type=http',
-    '--load-images=no',
     ]
     webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.customHeaders.Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
     webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.customHeaders.User-Agent'] = 'Mozilla/5.0 (X11; Windows x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.117 Safari/537.36'
@@ -91,7 +90,7 @@ def openUrl(httpProxy, url, id, i):
   driver = getDriver(httpProxy, 'PhantomJS')
   #driver = getDriver(httpProxy, 'Chrome')
   driver.set_window_size(500,500)
-  #driver.headers = {"Referer" : url}
+  driver.headers = {"Referer" : url}
   driver.set_page_load_timeout(30)
   driver.set_script_timeout(5)
   try:

@@ -15,16 +15,16 @@ http://www.youdaili.cn/Daili/
 '''
 
 import sys,re,time,os
-import urllib
+import urllib2
 from bs4 import BeautifulSoup
 import socket
 import threading
 from socket import error as socket_error
-import datetime
+from datetime import datetime
 
 proxyFilePath = time.strftime("%Y%m%d")
 proxyDict = []
-
+headers = {'Accept-Charset':'GBK,utf-8;q=0.7,*;q=0.3','User-Agent' : 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.151 Safari/534.16'}
 class FetchProxyServerThread(threading.Thread):
   def __init__(self, ip, port, title):
     threading.Thread.__init__(self)
@@ -51,7 +51,8 @@ def fetchProxyServer(url):
   '''
    抓取 proxy server 信息
   '''
-  response = urllib.urlopen(url)
+  request = urllib2.Request(url, headers = headers)
+  response = urllib2.urlopen(request)
   result = response.read()
   soup = BeautifulSoup(result)
   spandata = soup.find_all("div",class_="cont_font")[0].find("p")
@@ -90,14 +91,16 @@ def getYoudailiUrl():
   '''
   linksDict = []
   # 得到主页对应的最新的url
-  response = urllib.urlopen("http://www.youdaili.cn/Daili/guonei/")
+  request = urllib2.Request("http://www.youdaili.cn/Daili/guonei/", headers = headers)
+  response = urllib2.urlopen(request)
   result = response.read()
   soup = BeautifulSoup(result)
   url = soup.find_all("ul",class_="newslist_line")[0].find("a")['href']
   linksDict.append(url)
   id = re.compile("http\/(.*?)\.html").findall(url)
   # 得到分页URL
-  response = urllib.urlopen(url)
+  request = urllib2.Request(url, headers = headers)
+  response = urllib2.urlopen(request)
   result = response.read()
   soup = BeautifulSoup(result)
   liList = soup.find_all("ul",class_="pagelist")[0].find_all('li')
