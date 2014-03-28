@@ -68,6 +68,7 @@ def getDriver(httpProxy = '', type='Firefox'):
     driver = webdriver.PhantomJS(executable_path='windows/phantomjs.exe', service_args=service_args)
   else: # Chrome
     chrome_options = webdriver.ChromeOptions()
+    #chrome_options.add_extension('firefox_extensions/adblockplus_1_7_4.crx')
     chrome_options.add_argument('--proxy-server=%s' % httpProxy)
     driver = webdriver.Chrome(executable_path='windows/chromedriver.exe', chrome_options=chrome_options)
   return driver
@@ -150,28 +151,23 @@ def getProxyInfo():
   pass
 
 if __name__ == '__main__':
-  getProxyInfo()
-  sys.exit()
-  # 参数检测
-  if len(sys.argv) <> 3:
+  if len(sys.argv) == 1:
+    getProxyInfo()
+  elif len(sys.argv) <> 3:
     print "使用说明:"
     print "python %s proxyIP proxyPort" % sys.argv[0]
     print "proxyIP,proxyPort 获取方式: http://www.youdaili.cn/"
-    sys.exit()
-  
-  ip   = sys.argv[1]
-  port = sys.argv[2]
-  # 获取 proxy info params
-  if testSocket(ip, port):
-    httpProxy = ":".join([ip, port])
-    proxy = urllib2.ProxyHandler({'http': httpProxy})
-    opener = urllib2.build_opener(proxy)
-    urllib2.install_opener(opener)
-    personalData(httpProxy)
   else:
-    print "please change another proxy!!"
-    sys.exit()
-  pass
-
+    ip   = sys.argv[1]
+    port = sys.argv[2]
+    # 获取 proxy info params
+    if testSocket(ip, port):
+      httpProxy = ":".join([ip, port])
+      proxy = urllib2.ProxyHandler({'http': httpProxy})
+      opener = urllib2.build_opener(proxy)
+      urllib2.install_opener(opener)
+      personalData(httpProxy)
+    else:
+      print "please change another proxy!!"
 
 

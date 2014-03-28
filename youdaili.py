@@ -16,6 +16,7 @@ http://www.youdaili.cn/Daili/
 
 import sys,re,time,os
 import urllib2
+import shutil
 from bs4 import BeautifulSoup
 import socket
 import threading
@@ -115,7 +116,7 @@ if __name__ == '__main__':
   if not os.path.exists(proxyFilePath): os.makedirs(proxyFilePath)
   # 删除昨天的文件夹
   removePath = time.strftime("%Y%m%d",time.gmtime(time.time()-24*3600))
-  if os.path.exists(removePath): os.remove(removePath)
+  if os.path.exists(removePath): shutil.rmtree(removePath)
   linksDict = getYoudailiUrl()
   for url in linksDict:
     fetchProxyServer(url)
