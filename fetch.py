@@ -5,6 +5,8 @@
 
 # http://selenium-python.readthedocs.org/en/latest/installation.html
 
+# easy_install pyvirtualdisplay
+
 '''
 免费代理 IP地址: http://www.youdaili.cn/
 '''
@@ -152,7 +154,11 @@ def getProxyInfo():
 
 if __name__ == '__main__':
   if len(sys.argv) == 1:
+    #from pyvirtualdisplay import Display
+    #display = Display(visible=0, size=(1024, 768))
+    #display.start()
     getProxyInfo()
+    #display.stop()
   elif len(sys.argv) <> 3:
     print "使用说明:"
     print "python %s proxyIP proxyPort" % sys.argv[0]
